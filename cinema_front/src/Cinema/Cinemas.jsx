@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import axios from "axios";
 import Cinema from "./Cinema";
 import style from "../Admin/Admin.module.css";
+import mainStyle from "../App.module.css"
 
 const Cinemas = (props) => {
 
@@ -43,8 +44,12 @@ const Cinemas = (props) => {
                 setCinemas(response.data)
                 return response.data
             }
-        })
-        setCinemas(cinemas)
+        }).catch((reason => {
+            if (reason.response.status === 400)
+                alert('Введите корректные данные')
+            else
+                alert(reason)
+        }))
         setCinemaName('')
     }
 
@@ -58,12 +63,16 @@ const Cinemas = (props) => {
 
     return <div className={style.block}>
         <h1>Кинотеатры</h1>
+        <table className={mainStyle.infoTable}>
         {
             props.cinemas !== null &&
             props.cinemas.map((cinema) => <Cinema cinema={cinema} setCinemas={props.setCinemas} deleteCinema={deleteCinema}/>)
         }
-        <textarea ref={inputCinemaName} value={cinemaName} onChange={onChangeCinemaName}/>
-        <input type={'number'} min={0} ref={inputTickets} value={countTickets} onChange={onChangeTickets}/>
+        </table>
+        <hr/>
+        <h3>Добавление нового кинотетра</h3>
+        <input placeholder={"Название кинотеатра"} ref={inputCinemaName} value={cinemaName} onChange={onChangeCinemaName}/>
+        <input placeholder={"Количество мест в зале"} type={'number'} min={0} ref={inputTickets} value={countTickets} onChange={onChangeTickets}/>
         <button onClick={() => createCinema(props.setCinemas)}>Добавить новый кинотеатр</button>
     </div>
 }

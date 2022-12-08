@@ -2,6 +2,7 @@ import Cinema from "../../Cinema/Cinema";
 import React from "react";
 import axios from "axios";
 import Ticket from "./Ticket";
+import style from "../User.module.css"
 
 let Tickets = (props) => {
 
@@ -29,7 +30,7 @@ let Tickets = (props) => {
         props.setOrders(orders)
     }
 
-    return <div>
+    return <div className={style.block}>
         <h2>Ваши билеты</h2>
         {
             props.orders !== null &&

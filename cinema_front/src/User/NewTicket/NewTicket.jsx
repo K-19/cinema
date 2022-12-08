@@ -1,6 +1,7 @@
 import Select from "react-select";
 import React from "react";
 import axios from "axios";
+import style from "../User.module.css"
 
 let NewTicket = (props) => {
 
@@ -89,39 +90,46 @@ let NewTicket = (props) => {
 
     let SelectFilm
     if (chooseCinema !== null) {
-        SelectFilm = <Select onChange={(value) => onChangeFilm(value)} options={getFilms()}/>
+        SelectFilm = <Select placeholder={"Выберите фильм..."} className={style.select} onChange={(value) => onChangeFilm(value)} options={getFilms()}/>
     }
 
     let SelectSeance
     if (chooseFilm !== null) {
-        SelectSeance = <Select onChange={(value) => onChangeSeance(value)} options={getSeances()}/>
+        SelectSeance = <Select placeholder={"Выберите сеанс..."} placehol className={style.select} onChange={(value) => onChangeSeance(value)} options={getSeances()}/>
     }
 
     let SelectCountTickets
     if (chooseSeance !== null) {
-        SelectCountTickets = <input type={"number"} min={1} max={chooseSeance.tickets} ref={inputCountTickets} value={chooseCountTickets} onChange={() => setChooseCountTickets(inputCountTickets.current.value)}/>
+        SelectCountTickets =
+            <div>Количество мест:<div><input type={"number"} min={1} max={chooseSeance.tickets} ref={inputCountTickets} value={chooseCountTickets} onChange={() => setChooseCountTickets(inputCountTickets.current.value)}/></div></div>
     }
 
     async function orderTickets() {
+        debugger
         let data = {
             user: JSON.parse(localStorage.getItem('user')).id,
-            seance: chooseSeance.value,
+            seance: chooseSeance === null ? null : chooseSeance.value,
             tickets: chooseCountTickets
         }
         let availableOrders = await axios.post('http://localhost:8080/orders', data).then((response) => {
             if (response.status === 200) {
                 props.setCurrentOrders(response.data)
-                return response.data
             }
-        })
-        props.setCurrentOrders(availableOrders)
+        }).catch((reason => {
+            if (reason.response.status === 400)
+                alert('Введите корректные данные')
+            else
+                alert(reason)
+        }))
     }
 
-    return <div>
-        <Select onChange={(value) => setChooseCinema(value)} options={getCinemas()}/>
+    return <div className={style.block}>
+        <Select placeholder={"Выберите кинотеатр..."} className={style.select} onChange={(value) => setChooseCinema(value)} options={getCinemas()}/>
         {SelectFilm}
         {SelectSeance}
-        {SelectCountTickets}
+        <div>
+            {SelectCountTickets}
+        </div>
         <button onClick={() => orderTickets()} >Оформить заказ</button>
     </div>
 }

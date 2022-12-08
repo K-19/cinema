@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import Select from "react-select"
 import axios from "axios";
 import style from "../Admin/Admin.module.css";
+import mainStyle from "../App.module.css";
 import Seance from "./Seance";
 import DateTimePicker from "react-datetime-picker";
 
@@ -36,17 +37,20 @@ const Seances = (props) => {
 
     async function createSeance() {
         let data = {
-            film: filmId.value,
-            cinema: cinemaId.value,
+            film: filmId === null ? null : filmId.value,
+            cinema: cinemaId === null ? null : cinemaId.value,
             dateTime: dateTime
         }
         let seances = await axios.post('http://localhost:8080/seances', data).then((response) => {
             if (response.status === 200) {
                 setSeances(response.data)
-                return response.data
             }
-        })
-        setSeances(seances)
+        }).catch((reason => {
+            if (reason.response.status === 400)
+                alert('Введите корректные данные')
+            else
+                alert(reason)
+        }))
     }
 
     let getCinemas = () => {
@@ -77,14 +81,22 @@ const Seances = (props) => {
 
     return <div className={style.block}>
         <h1>Сеансы</h1>
+        <table className={mainStyle.infoTable}>
         {
             seances !== null &&
             seances.map((seance) => <Seance seance={seance} deleteSeance={deleteSeance}/>)
         }
-        <Select onChange={(value) => setCinemaId(value)} options={getCinemas()}/>
-        <Select onChange={(value) => setFilmId(value)} options={getFilms()}/>
-        <DateTimePicker value={dateTime} onChange={(value) => setDateTime(value)}/>
-        <button onClick={() => createSeance()}>Добавить новый сеанс</button>
+        </table>
+        <hr/>
+        <h3>Добавить новый сеанс</h3>
+        <div>
+            <Select className={style.select} placeholder={"Выберите кинотеатр..."} onChange={(value) => setCinemaId(value)} options={getCinemas()}/>
+        </div><div>
+            <Select className={style.select} placeholder={"Выберите фильм..."} onChange={(value) => setFilmId(value)} options={getFilms()}/>
+        </div>Начало сеанса:<div>
+            <DateTimePicker className={style.datePicker} value={dateTime} onChange={(value) => setDateTime(value)}/>
+        </div>
+            <button onClick={() => createSeance()}>Добавить новый сеанс</button>
     </div>
 }
 

@@ -1,6 +1,6 @@
 import React, {useRef, useState} from 'react'
 import {useNavigate} from "react-router";
-import {http} from '../service/get'
+import style from './login.module.css'
 
 const Login = function () {
 
@@ -33,6 +33,7 @@ const Login = function () {
             },
         })
             .then((data) => {
+                debugger
                 if (data.status === 200) {
                     data.json().then(data => {
                         localStorage.setItem('user', JSON.stringify(data))
@@ -40,12 +41,14 @@ const Login = function () {
                             navigate('/profile')
                         else
                             navigate("/admin")
-                        alert(JSON.parse(localStorage.getItem('user')).email)
                     })
 
                 }
-            })
-            .catch((err) => {console.log(err.message)});
+                else if (data.status === 400)
+                    alert('Введите корректные данные')
+                else
+                    alert(data)
+            });
     }
 
     let onChangePasswordText = () => {
@@ -56,12 +59,17 @@ const Login = function () {
         setEmail(inputEmail.current.value);
     }
 
-    return <div>
-        <div>
-            <textarea ref={inputEmail} value={email} onChange={onChangeEmailText}/>
-            <textarea ref={inputPassword} value={password} onChange={onChangePasswordText}/>
-            <button onClick={onClickButton}>Войти</button>
-            <button onClick={onClickRegistrationButton}>Зарегистрироваться</button>
+    return <div className={style.outer}>
+        <div className={style.mainLogin}>
+            <div>
+                <input placeholder={"Логин"} ref={inputEmail} value={email} onChange={onChangeEmailText}/>
+            </div><div>
+                <input type={"password"} placeholder={"Пароль"} ref={inputPassword} value={password} onChange={onChangePasswordText}/>
+            </div><div>
+                <button onClick={onClickRegistrationButton}>Зарегистрироваться</button>
+            {"  "}
+                <button onClick={onClickButton}>Войти</button>
+        </div>
         </div>
     </div>
 }

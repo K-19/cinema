@@ -1,8 +1,10 @@
 package by.bsuir.drankovich.cinema.controller;
 
+import by.bsuir.drankovich.cinema.model.entity.Cinema;
 import by.bsuir.drankovich.cinema.model.entity.Order;
 import by.bsuir.drankovich.cinema.model.entity.Seance;
 import by.bsuir.drankovich.cinema.model.entity.User;
+import by.bsuir.drankovich.cinema.model.repository.CinemaRepository;
 import by.bsuir.drankovich.cinema.model.repository.OrderRepository;
 import by.bsuir.drankovich.cinema.model.repository.SeanceRepository;
 import by.bsuir.drankovich.cinema.model.repository.UserRepository;
@@ -41,8 +43,18 @@ public class OrderController {
 
     @PostMapping("/orders")
     public ResponseEntity<Iterable<Order>> createOrder(@RequestBody OrderRequest request) {
+        if (request == null ||
+                request.getUser() == null ||
+                request.getUser() <= 0 ||
+                request.getSeance() == null ||
+                request.getSeance() <= 0 ||
+                request.getTickets() == null ||
+                request.getTickets() <= 0)
+            return ResponseEntity.badRequest().build();
         if (seanceRepository.existsById(request.getSeance()) && userRepository.existsById(request.getUser())) {
             Seance seance = seanceRepository.findById(request.getSeance()).get();
+            if (seance.getRemainingTickets() < request.getTickets())
+                return ResponseEntity.badRequest().build();
             User user = userRepository.findById(request.getUser()).get();
             Order order = Order.builder()
                     .seance(seance)

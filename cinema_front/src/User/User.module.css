@@ -1,8 +1,27 @@
+.filmBlock {
+    text-align: center;
+    display: inline-block;
+    width: 15vw;
+    height: 15vw;
+    border: 2px gray solid;
+    justify-content: center;
+    position: relative;
+}
+
+.filmBlock p {
+    display: table-cell;
+    vertical-align: middle;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+}
+
 .block {
     text-align: -webkit-center;
     display: inline-block;
     width: 33%;
-    min-height: 95vh;
+    min-height: 55vh;
     vertical-align: top;
     border-right: 2px gray solid;
     border-left: 2px gray solid;
@@ -31,15 +50,7 @@
     border-radius: 5px;
 }
 
-.inputTime {
-    width: 13%;
-}
-
 .select {
     width: 80%;
-    margin-bottom: 7px;
-}
-
-.datePicker {
     margin-bottom: 7px;
 }

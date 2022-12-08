@@ -16,8 +16,10 @@ const Admin = () => {
         navigate('/login')
     }
 
-    return <div>
-        <button onClick={() => logOut()} >Выйти</button>
+    return <div className={style.outer}>
+        <div className={style.header}>
+            <button onClick={() => logOut()} >Выйти</button>
+        </div>
         <div>
             <Cinemas cinemas={cinemas} setCinemas={setCinemas}/>
             <Films films={films} setFilms={setFilms}/>

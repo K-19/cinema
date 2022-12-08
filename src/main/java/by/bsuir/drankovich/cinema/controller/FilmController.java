@@ -20,6 +20,12 @@ public class FilmController {
 
     @PostMapping
     public ResponseEntity<Iterable<Film>> createFilm(@RequestBody Film film) {
+        if (film == null ||
+                film.getName() == null ||
+                film.getName().isEmpty() ||
+                film.getDurationSeconds() == null ||
+                film.getDurationSeconds() <= 0)
+            return ResponseEntity.badRequest().build();
         filmRepository.save(film);
         return films();
     }

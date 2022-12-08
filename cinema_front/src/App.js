@@ -1,5 +1,4 @@
 import logo from './logo.svg';
-import style from './App.module.css'
 import './App.css';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Login from "./Login/Login";

@@ -2,6 +2,7 @@ import Ticket from "../Tickets/Ticket";
 import React from "react";
 import axios from "axios";
 import ArchiveTicket from "./ArchiveTicket";
+import style from "../User.module.css"
 
 let Archive = (props) => {
 
@@ -18,7 +19,7 @@ let Archive = (props) => {
 
     }, []);
 
-    return <div>
+    return <div className={style.block}>
         <h2>Архив</h2>
         {
             props.orders !== null &&

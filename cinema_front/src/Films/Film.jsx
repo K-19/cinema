@@ -1,5 +1,6 @@
 import {Component} from "react";
 import React from "react";
+import style from '../App.module.css'
 
 class Film extends Component {
 
@@ -14,11 +15,14 @@ class Film extends Component {
     }
 
     render() {
-        return <div>
-            <ul key={this.props.film.id}>{this.nameFilm(this.props.film)}
+        return <tr className={style.infoBlock}>
+            <td key={this.props.film.id}>
+                {this.nameFilm(this.props.film)}
+            </td>
+            <td>
                 <button onClick={() => this.props.deleteFilm(this.props.film.id)}>Удалить</button>
-            </ul>
-        </div>
+            </td>
+        </tr>
     }
 }
 

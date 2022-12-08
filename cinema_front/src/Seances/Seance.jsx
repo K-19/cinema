@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import style from '../App.module.css'
 
 class Seance extends Component {
 
@@ -21,11 +22,14 @@ class Seance extends Component {
     }
 
     render() {
-        return <div>
-            <ul key={this.props.seance.id}>{this.props.seance.film.name + ' | Кинотеатр ' + this.props.seance.cinema.name + ' | ' + this.formatDate(this.props.seance.film, this.props.seance.dateTime)}
+        return <tr className={style.infoBlock}>
+            <td key={this.props.seance.id}>
+                {this.props.seance.film.name + ' | Кинотеатр ' + this.props.seance.cinema.name + ' | ' + this.formatDate(this.props.seance.film, this.props.seance.dateTime)}
+            </td>
+            <td>
                 <button onClick={() => this.props.deleteSeance(this.props.seance.id)}>Удалить</button>
-            </ul>
-        </div>
+            </td>
+        </tr>
     }
 }
 

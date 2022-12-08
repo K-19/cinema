@@ -1,13 +1,10 @@
-import Cinemas from "../Cinema/Cinemas";
-import Films from "../Films/Films";
-import Seances from "../Seances/Seances";
 import React from "react";
 import axios from "axios";
-import Film from "../Films/Film";
 import {useNavigate} from "react-router";
 import NewTicket from "./NewTicket/NewTicket";
 import Tickets from "./Tickets/Tickets";
 import Archive from "./Archive/Archive";
+import style from "./User.module.css"
 
 let User = () => {
 
@@ -43,14 +40,17 @@ let User = () => {
         loadCinemas()
     }, []);
 
-    return <div>
+    return <div className={style.outer}>
+        <div className={style.header}>
         <button onClick={() => logOut()} >Выйти</button>
+    </div>
         <div>
             {
                 films !== null &&
-                films.map((film) => <div>{film.name}</div>)
+                films.map((film) => <div className={style.filmBlock}><p>{film.name}</p></div>)
             }
         </div>
+        <hr/>
         <div>
             <NewTicket cinemas={cinemas} films={films} setCurrentOrders={setCurrentOrders}/>
             <Tickets orders={currentOrders} setOrders={setCurrentOrders}/>

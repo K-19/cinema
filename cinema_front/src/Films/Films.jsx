@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import axios from "axios";
 import style from "../Admin/Admin.module.css";
 import Film from "./Film";
+import mainStyle from '../App.module.css'
 
 const Films = (props) => {
 
@@ -45,10 +46,13 @@ const Films = (props) => {
         let films = await axios.post('http://localhost:8080/films', data).then((response) => {
             if (response.status === 200) {
                 props.setFilms(response.data)
-                return response.data
             }
-        })
-        props.setFilms(films)
+        }).catch((reason => {
+            if (reason.response.status === 400)
+                alert('Введите корректные данные')
+            else
+                alert(reason)
+        }))
         setFilmName('')
         setDurationH('')
         setDurationM('')
@@ -73,14 +77,23 @@ const Films = (props) => {
 
     return <div className={style.block}>
         <h1>Фильмы</h1>
-        {
-            props.films !== null &&
-            props.films.map((film) => <Film film={film} deleteFilm={deleteFilm}/>)
-        }
-        <textarea ref={inputFilmName} value={filmName} onChange={onChangeFilmName}/>
-        <input type={"number"} min={0} ref={inputDurationH} value={durationH} onChange={onChangeDurationH}/>
-        <input type={"number"} min={0} max={59} ref={inputDurationM} value={durationM} onChange={onChangeDurationM}/>
-        <input type={"number"} min={0} max={59} ref={inputDurationS} value={durationS} onChange={onChangeDurationS}/>
+        <table className={mainStyle.infoTable}>
+            {
+                props.films !== null &&
+                props.films.map((film) => <Film film={film} deleteFilm={deleteFilm}/>)
+            }
+        </table>
+        <hr/>
+            <h3>Добавление нового фильма</h3>
+        <div>
+            <input placeholder={"Название фильма"} ref={inputFilmName} value={filmName} onChange={onChangeFilmName}/>
+        </div>
+        Продолжительность фильма:
+        <div>
+            <input className={style.inputTime} type={"number"} min={0} ref={inputDurationH} value={durationH} onChange={onChangeDurationH}/>{" ч."}
+            <input className={style.inputTime} type={"number"} min={0} max={59} ref={inputDurationM} value={durationM} onChange={onChangeDurationM}/>{" мин."}
+            <input className={style.inputTime} type={"number"} min={0} max={59} ref={inputDurationS} value={durationS} onChange={onChangeDurationS}/>{" сек."}
+        </div>
         <button onClick={() => createFilm()}>Добавить новый фильм</button>
     </div>
 }

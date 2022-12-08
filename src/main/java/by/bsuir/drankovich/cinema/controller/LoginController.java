@@ -24,6 +24,12 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody RequestLogin requestLogin) {
+        if (requestLogin == null ||
+                requestLogin.getEmail() == null ||
+                requestLogin.getEmail().isEmpty() ||
+                requestLogin.getPassword() == null ||
+                requestLogin.getPassword().isEmpty())
+            return ResponseEntity.badRequest().build();
         if (!userRepository.existsByEmailAndPassword(requestLogin.getEmail(), DigestUtils.md5Hex(requestLogin.getPassword()))) {
             return ResponseEntity.status(403).build();
         }
@@ -33,6 +39,19 @@ public class LoginController {
 
     @PostMapping("/registration")
     public ResponseEntity<?> registration(@RequestBody RequestRegistration registration) {
+        if (registration == null ||
+                registration.getEmail() == null ||
+                registration.getEmail().isEmpty() ||
+                registration.getPassword() == null ||
+                registration.getPassword().isEmpty() ||
+                registration.getName() == null ||
+                registration.getName().isEmpty() ||
+                registration.getSurname() == null ||
+                registration.getSurname().isEmpty() ||
+                registration.getPhoneNumber() == null ||
+                registration.getPhoneNumber().isEmpty() ||
+                registration.getBirthday() == null)
+            return ResponseEntity.badRequest().build();
         if (userRepository.existsByEmail(registration.getEmail())) {
             return ResponseEntity.status(409).build();
         }

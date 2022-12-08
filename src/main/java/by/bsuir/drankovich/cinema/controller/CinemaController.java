@@ -23,7 +23,13 @@ public class CinemaController {
 
     @PostMapping("/cinemas")
     public ResponseEntity<Iterable<Cinema>> createCinema(@RequestBody Cinema cinema) {
-        cinemaRepository.save(cinema);
+        if (cinema == null ||
+                cinema.getName() == null ||
+                cinema.getName().isEmpty() ||
+                cinema.getCountTickets() == null ||
+                cinema.getCountTickets() <= 0)
+            return ResponseEntity.badRequest().build();
+            cinemaRepository.save(cinema);
         return cinemas();
     }
 
